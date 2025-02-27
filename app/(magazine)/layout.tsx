@@ -1,16 +1,19 @@
 import type { Metadata } from 'next';
-// import { Geist, Geist_Mono } from "next/font/google";
 import '../globals.css';
+import localFont from 'next/font/local';
+import Header from '@/components/custom/Header';
+import Footer from '@/components/custom/Footer';
+import { LenisGSAP } from '@/components/animations/LenisGSAP';
 
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
+const bodyFont = localFont({
+  src: '../../public/fonts/jmakkas.ttf',
+  variable: '--font-body',
+});
 
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
+const headingFont = localFont({
+  src: '../../public/fonts/sohidsafkat.ttf',
+  variable: '--font-heading',
+});
 
 export const metadata: Metadata = {
   title: 'Roktakto KUET',
@@ -26,9 +29,15 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-      // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${headingFont.variable} ${bodyFont.variable} antialiased`}
       >
-        {children}
+        <LenisGSAP>
+          <main className='font-cbody'>
+            <Header />
+            {children}
+            <Footer />
+          </main>
+        </LenisGSAP>
       </body>
     </html>
   );
