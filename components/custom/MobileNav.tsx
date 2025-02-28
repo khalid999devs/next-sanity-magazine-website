@@ -40,18 +40,18 @@ const MobileNav = ({
           আমাদের কথা
         </Link>
         <Link
-          href={'/documentary'}
+          href={'/july-movement'}
           className='text-xl cursor-pointer hover:underline underline-offset-4 transition-all duration-300'
           onClick={closeMobileNav}
         >
-          ডকুমেন্টারী
+          জুলাই আন্দোলন
         </Link>
         <Link
           className='btn !text-xl mt-2 inline-block'
-          href={'#'}
+          href={'/18feb'}
           onClick={closeMobileNav}
         >
-          প্রমাণ দেখুন
+          ১৮ই ফেব্রুয়ারী
         </Link>
       </div>
     </div>

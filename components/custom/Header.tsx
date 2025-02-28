@@ -38,13 +38,13 @@ const Header = (props: Props) => {
             আমাদের কথা
           </Link>
           <Link
-            href={'/documentary'}
+            href={'/july-movement'}
             className='text-lg 2xl:text-xl cursor-pointer hover:underline underline-offset-4 transition-all duration-300'
           >
-            ডকুমেন্টারী
+            জুলাই আন্দোলন
           </Link>
-          <Link className='btn' href={'#proof'}>
-            প্রমাণ দেখুন
+          <Link className='btn' href={'/18feb'}>
+            ১৮ই ফেব্রুয়ারী
           </Link>
         </div>
         <div className='flex md:hidden'>

@@ -4,7 +4,6 @@ import { imageUrl } from '@/components/lib/imageUrl';
 import ContentPopup from '@/components/utils/ContentPopup';
 import Loader from '@/components/utils/Loader';
 import { Category, SanityImageAsset } from '@/sanity.types';
-import { getProofFilesByCat } from '@/sanity/lib/feb/getProofFilesByCat';
 import { ChevronRight, Play } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -12,10 +11,11 @@ import React, { useEffect, useState } from 'react';
 
 type Props = {
   categories?: Category[] | null;
-  proofImages: any;
+  proofImages?: any;
+  mode?: 'full' | 'short';
 };
 
-const Proof = ({ categories, proofImages }: Props) => {
+const Proof = ({ categories, proofImages, mode = 'short' }: Props) => {
   const [currentCat, setCurrentCat] = useState<string | null | undefined>(
     'pictures'
   );
@@ -35,7 +35,9 @@ const Proof = ({ categories, proofImages }: Props) => {
   const setProofFilesByCategory = async () => {
     setLoading(true);
     try {
-      const response: any = await fetch(`/api/proof?category=${currentCat}`);
+      const response: any = await fetch(
+        `/api/proof?category=${currentCat}&mode=${mode}`
+      );
       const proofFilesFromDb = await response.json();
       setProofFiles([
         ...proofFilesFromDb?.proofImages,
@@ -49,7 +51,7 @@ const Proof = ({ categories, proofImages }: Props) => {
   };
 
   useEffect(() => {
-    if (currentCat === 'pictures') {
+    if (currentCat === 'pictures' && mode === 'short') {
       setProofFiles(proofImages);
     } else {
       setProofFilesByCategory();
@@ -181,15 +183,17 @@ const Proof = ({ categories, proofImages }: Props) => {
         )}
       </div>
 
-      <div className='py-8 w-full flex items-center justify-center text-center'>
-        <Link
-          href={'/18feb/proofs'}
-          className='text-primary-main transition-all duration-300 opacity-70 hover:opacity-100 underline underline-offset-2 hover:underline hover:underline-offset-4 text-xl flex items-center group'
-        >
-          <span> আরো দেখুন</span>{' '}
-          <ChevronRight className='group-hover:translate-x-1 transition-transform duration-300' />
-        </Link>
-      </div>
+      {mode === 'short' && (
+        <div className='py-8 w-full flex items-center justify-center text-center'>
+          <Link
+            href={'/18feb/proofs'}
+            className='text-primary-main transition-all duration-300 opacity-70 hover:opacity-100 underline underline-offset-2 hover:underline hover:underline-offset-4 text-xl flex items-center group'
+          >
+            <span> আরো দেখুন</span>{' '}
+            <ChevronRight className='group-hover:translate-x-1 transition-transform duration-300' />
+          </Link>
+        </div>
+      )}
 
       {contentPopup && (
         <ContentPopup

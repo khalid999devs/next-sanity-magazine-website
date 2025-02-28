@@ -15,7 +15,7 @@ const page = async () => {
     return notFound();
   }
 
-  console.log(feb18Data);
+  // console.log(feb18Data);
 
   return (
     <div className='w-full relative min-h-screen'>

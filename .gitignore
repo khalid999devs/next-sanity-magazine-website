@@ -19,10 +19,16 @@
 
 # production
 /build
+/dist
+dist/
+
+.sanity/
+public/images/
 
 # misc
 .DS_Store
 *.pem
+
 
 # debug
 npm-debug.log*
