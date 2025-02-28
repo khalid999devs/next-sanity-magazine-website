@@ -5,6 +5,8 @@ import React from 'react';
 import About from '../../../components/sections/18feb/About';
 import { getAllCategories } from '@/sanity/lib/feb/getAllCategories';
 import Proof from '@/components/sections/18feb/Proof';
+import Timeline from '@/components/sections/18feb/Timeline';
+import OurAskings from '@/components/sections/18feb/OurAskings';
 
 const page = async () => {
   const feb18Data = await get18FebData('pictures');
@@ -13,7 +15,7 @@ const page = async () => {
     return notFound();
   }
 
-  // console.log(categories);
+  console.log(feb18Data);
 
   return (
     <div className='w-full relative min-h-screen'>
@@ -26,6 +28,10 @@ const page = async () => {
       <About bannerImage={feb18Data.bannerimage} />
 
       <Proof categories={categories} proofImages={feb18Data.proofImages} />
+      {feb18Data && (feb18Data?.timeline as any).length > 0 && (
+        <Timeline timelines={feb18Data.timeline} />
+      )}
+      <OurAskings />
     </div>
   );
 };

@@ -16,11 +16,10 @@ type Props = {
   images: any;
 };
 
-type HeroType = Pick<February, 'title' | 'subtitle' | 'slug' | 'images'>;
-
 const Hero = ({ title, subtitle, slug, images }: Props) => {
   const trackRef = useRef<HTMLDivElement>(null);
 
+  // Duplicate images for seamless infinite scrolling
   const duplicatedImages = useMemo(
     () => (images ? [...images, ...images] : []),
     [images]
@@ -30,28 +29,35 @@ const Hero = ({ title, subtitle, slug, images }: Props) => {
     if (!trackRef.current || !duplicatedImages.length) return;
 
     const track = trackRef.current;
-    const originalWidth = track.scrollWidth / 2;
-    let ctx: gsap.Context;
+    let ctx: gsap.Context | null = null;
+    let animation: gsap.core.Tween | null = null;
 
-    const initAnimation = () => {
+    const initAnimation = (speed: number) => {
+      if (!track) return;
+
+      const originalWidth = track.scrollWidth / 2;
+
       ctx = gsap.context(() => {
-        const animation = gsap.to(track, {
+        animation = gsap.to(track, {
           x: -originalWidth,
-          duration: 20,
+          duration: speed,
           ease: 'none',
           repeat: -1,
         });
 
-        const handleMouseEnter = () => animation.pause();
-        const handleMouseLeave = () => animation.resume();
+        const handleMouseEnter = () => animation?.pause();
+        const handleMouseLeave = () => animation?.resume();
 
         track.addEventListener('mouseenter', handleMouseEnter);
         track.addEventListener('mouseleave', handleMouseLeave);
 
         const resizeObserver = new ResizeObserver(() => {
           const newWidth = track.scrollWidth / 2;
-          animation.vars.x = -newWidth;
-          animation.invalidate();
+          if (animation) {
+            animation.vars.x = -newWidth;
+            animation.invalidate();
+            animation.restart();
+          }
         });
 
         resizeObserver.observe(track);
@@ -64,17 +70,30 @@ const Hero = ({ title, subtitle, slug, images }: Props) => {
       }, track);
     };
 
-    const imagesLoaded = Array.from(track.querySelectorAll('img'));
-    Promise.all(
-      imagesLoaded.map(
-        (img) =>
-          new Promise((resolve) =>
-            img.complete ? resolve(true) : (img.onload = resolve)
-          )
-      )
-    ).then(initAnimation);
+    let mm = gsap.matchMedia();
+    mm.add('(min-width: 1460px)', () => initAnimation(45)); // Slower for large screens
+    mm.add('(min-width: 1041px)', () => initAnimation(40)); // Slower for large screens
+    mm.add('(max-width: 1040px)', () => initAnimation(30)); // Faster for smaller screens
 
-    return () => ctx?.revert();
+    const images = Array.from(track.querySelectorAll('img'));
+    images.forEach((img) => {
+      if (!img.complete) {
+        img.onload = () => {
+          console.log('Image loaded, updating animation');
+          if (animation) {
+            const newWidth = track.scrollWidth / 2;
+            animation.vars.x = -newWidth;
+            animation.invalidate();
+            animation.restart();
+          }
+        };
+      }
+    });
+
+    return () => {
+      ctx?.revert();
+      animation?.kill();
+    };
   }, [duplicatedImages]);
 
   return (
@@ -110,34 +129,37 @@ const Hero = ({ title, subtitle, slug, images }: Props) => {
               <SmallTextWithBullets text={'বিচার চাই'} />
             </div>
           </div>
-          <Link href={'#'} className='btn'>
+          <Link href={'#proof'} className='btn'>
             প্রমাণ দেখুন
           </Link>
         </div>
       </div>
 
-      <div className='flex flex-row w-full mb-8 overflow-x-hidden items-center justify-center -translate-y-12 2xl:-translate-y-24'>
-        <div
-          ref={trackRef}
-          className='flex flex-row gap-2.5 relative h-[300px] md:h-[350px] lg:h-[400px] w-max'
-        >
-          {duplicatedImages?.map((image: any, key: number) => (
-            <div key={key} className='relative !h-full w-fit flex-shrink-0'>
-              <Image
-                src={imageUrl(image).url()}
-                alt='show image'
-                className='object-cover rounded-lg !h-full w-fit'
-                width={500}
-                height={600}
-                sizes='(max-width: 640px) 100vw,
+      {/* Infinite Image Slider */}
+      {images?.length > 0 && (
+        <div className='flex flex-row w-full mb-8 overflow-x-hidden items-center justify-center -translate-y-12 2xl:-translate-y-24'>
+          <div
+            ref={trackRef}
+            className='flex flex-row gap-1 relative h-[300px] md:h-[350px] lg:h-[400px] w-max whitespace-nowrap'
+          >
+            {duplicatedImages?.map((image: any, key: number) => (
+              <div key={key} className='relative !h-full w-fit flex-shrink-0'>
+                <Image
+                  src={imageUrl(image).url()}
+                  alt='show image'
+                  className='object-cover rounded-lg !h-full w-fit'
+                  width={500}
+                  height={600}
+                  sizes='(max-width: 640px) 100vw,
                  (max-width: 768px) 50vw,
                  (max-width: 1024px) 33vw,
                  25vw'
-              />
-            </div>
-          ))}
+                />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

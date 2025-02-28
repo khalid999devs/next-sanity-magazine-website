@@ -138,6 +138,17 @@ export type February = {
       };
       _type: "file";
     };
+    thumbnail?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
     description?: Array<{
       children?: Array<{
         marks?: Array<string>;
@@ -353,7 +364,7 @@ export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/feb/get18FebData.ts
 // Variable: FEB_18_DATA_QUERY
-// Query: *[_type == "february"]{      title,      subtitle,      slug,      bannerimage,      images,      "proofImages": proofImages[category->slug.current == $category],      timeline    }[0]
+// Query: *[_type == "february"]{    title,    subtitle,    slug,    bannerimage,    images,    "proofImages": proofImages[category->slug.current == $category][0...4],    timeline  }[0]
 export type FEB_18_DATA_QUERYResult = {
   title: string | null;
   subtitle: string | null;
@@ -491,116 +502,11 @@ export type GET_ALL_CATEGORY_QUERYResult = Array<{
   description?: string;
 }>;
 
-// Source: ./sanity/lib/feb/getProofFilesByCat.ts
-// Variable: FILES_BY_CAT_QUERY
-// Query: *[_type == "february"]{       "proofImages": proofImages[category->slug.current == $category],       "proofVideos": proofVideos[category->slug.current == $category],     }[0]
-export type FILES_BY_CAT_QUERYResult = {
-  proofImages: Array<{
-    image?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-    description?: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
-      listItem?: "bullet";
-      markDefs?: Array<{
-        href?: string;
-        _type: "link";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    } | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-      _key: string;
-    }>;
-    category?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "category";
-    };
-    _key: string;
-  }> | null;
-  proofVideos: Array<{
-    video?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
-      };
-      _type: "file";
-    };
-    description?: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
-      listItem?: "bullet";
-      markDefs?: Array<{
-        href?: string;
-        _type: "link";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    } | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      _type: "image";
-      _key: string;
-    }>;
-    category?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "category";
-    };
-    _key: string;
-  }> | null;
-} | null;
-
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "\n   *[_type == \"february\"]{\n      title,\n      subtitle,\n      slug,\n      bannerimage,\n      images,\n      \"proofImages\": proofImages[category->slug.current == $category],\n      timeline\n    }[0]\n    ": FEB_18_DATA_QUERYResult;
+    "\n  *[_type == \"february\"]{\n    title,\n    subtitle,\n    slug,\n    bannerimage,\n    images,\n    \"proofImages\": proofImages[category->slug.current == $category][0...4],\n    timeline\n  }[0]\n": FEB_18_DATA_QUERYResult;
     "\n   *[_type == \"category\"]\n    ": GET_ALL_CATEGORY_QUERYResult;
-    "\n     *[_type == \"february\"]{\n       \"proofImages\": proofImages[category->slug.current == $category],\n       \"proofVideos\": proofVideos[category->slug.current == $category],\n     }[0]\n    ": FILES_BY_CAT_QUERYResult;
   }
 }

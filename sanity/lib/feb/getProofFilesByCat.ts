@@ -1,13 +1,26 @@
 import { defineQuery } from 'next-sanity';
 import { sanityFetch } from '../live';
 
-export const getProofFilesByCat = async (category: string = 'pictures') => {
-  let FILES_BY_CAT_QUERY = defineQuery(`
+export const getProofFilesByCat = async (
+  category: string = 'pictures',
+  mode: 'limit' | 'all' = 'limit'
+) => {
+  let FILES_BY_CAT_QUERY;
+  if (mode === 'all') {
+    FILES_BY_CAT_QUERY = defineQuery(`
      *[_type == "february"]{
        "proofImages": proofImages[category->slug.current == $category],
        "proofVideos": proofVideos[category->slug.current == $category],
      }[0]
     `);
+  } else {
+    FILES_BY_CAT_QUERY = defineQuery(`
+  *[_type == "february"]{
+    "proofImages": proofImages[category->slug.current == $category][0...4],
+    "proofVideos": proofVideos[category->slug.current == $category][0...4]
+  }[0]
+`);
+  }
 
   try {
     const proofFilesByCat = await sanityFetch({

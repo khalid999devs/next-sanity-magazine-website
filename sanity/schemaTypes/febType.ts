@@ -83,10 +83,17 @@ export const febType = defineType({
               category: 'category.title',
             },
             prepare(select) {
+              const description = select.description;
+              const text =
+                description && description[0]?.children
+                  ? description[0].children
+                      .map((child: any) => child.text)
+                      .join(' ')
+                  : 'No description';
               return {
                 media: select.image,
                 title: select.category,
-                subtitle: `${select.description ? select.description.slice(0, 18) : 'No description'}`,
+                subtitle: text.length <= 18 ? text : text.slice(0, 18) + '...',
               };
             },
           },
@@ -111,6 +118,14 @@ export const febType = defineType({
               },
             }),
             defineField({
+              name: 'thumbnail',
+              title: 'Video Thumbnail',
+              type: 'image',
+              options: {
+                hotspot: true,
+              },
+            }),
+            defineField({
               name: 'description',
               title: 'Description',
               type: 'blockContent',
@@ -124,11 +139,11 @@ export const febType = defineType({
           ],
           preview: {
             select: {
-              video: 'video',
+              thumbnail: 'thumbnail',
               description: 'description',
               category: 'category.title',
             },
-            prepare({ video, description, category }) {
+            prepare({ thumbnail, description, category }) {
               const text =
                 description && description[0]?.children
                   ? description[0].children
@@ -137,7 +152,7 @@ export const febType = defineType({
                   : 'No description';
 
               return {
-                media: video,
+                media: thumbnail,
                 title: category,
                 subtitle: text.length <= 18 ? text : text.slice(0, 18) + '...',
               };

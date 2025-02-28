@@ -2,6 +2,9 @@
 import gsap from 'gsap';
 import { ReactLenis } from 'lenis/react';
 import { ReactElement, useEffect, useRef } from 'react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function LenisGSAP({ children }: { children: ReactElement }) {
   const lenisRef = useRef<any>(null);

@@ -3,16 +3,16 @@ import { sanityFetch } from '../live';
 
 export const get18FebData = async (category: string = 'pictures') => {
   const FEB_18_DATA_QUERY = defineQuery(`
-   *[_type == "february"]{
-      title,
-      subtitle,
-      slug,
-      bannerimage,
-      images,
-      "proofImages": proofImages[category->slug.current == $category],
-      timeline
-    }[0]
-    `);
+  *[_type == "february"]{
+    title,
+    subtitle,
+    slug,
+    bannerimage,
+    images,
+    "proofImages": proofImages[category->slug.current == $category][0...4],
+    timeline
+  }[0]
+`);
 
   try {
     const feb18Data = await sanityFetch({

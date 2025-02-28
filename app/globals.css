@@ -62,6 +62,10 @@ body {
   .sec-inner-x-padding {
     @apply px-[10px] sm:px-[15px] md:px-[35px] lg:px-[60px];
   }
+
+  .max-w-med {
+    @apply m-auto relative max-w-[1170px];
+  }
   .sec-project-x-padding {
     @apply px-2 sm:px-6 md:px-14 lg:px-20;
   }
@@ -113,3 +117,21 @@ body {
     @apply w-3 h-3 rounded-full bg-primary-ellipse;
   }
 }
+
+/* Ensure proper stacking context
+.fixed {
+  z-index: 10;
+}
+
+.timeline-section {
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+/* Mobile optimization */
+/* @media (max-width: 768px) {
+  .timeline-section {
+    min-height: auto;
+    padding: 1rem 0;
+  }
+} */

@@ -21,7 +21,7 @@ const Header = (props: Props) => {
   }, [isMobileNav]);
 
   return (
-    <div className='w-full fixed top-0 left-0 z-50'>
+    <div className='w-full fixed top-0 left-0 z-50 bg-body-main'>
       <div className='flex max-width-medium w-full sec-x-padding justify-between items-center py-2 lg:py-3 2xl:py-4'>
         <Link href={'/'} className='logo'>
           <Image
@@ -43,7 +43,7 @@ const Header = (props: Props) => {
           >
             ডকুমেন্টারী
           </Link>
-          <Link className='btn' href={'#'}>
+          <Link className='btn' href={'#proof'}>
             প্রমাণ দেখুন
           </Link>
         </div>
